@@ -65,7 +65,8 @@ else
 fi
 
 cd "$ACTUAL_DIR"
-"$UV_BIN" run --python 3.12 --index-url https://mirrors.aliyun.com/pypi/simple/ python -m mirror_switch.main
+# 注意：因为用户是通过 | bash 执行的脚本，此时 stdin 是未连接到终端的，必须加上 < /dev/tty 获取交互输入
+"$UV_BIN" run --python 3.12 --index-url https://mirrors.aliyun.com/pypi/simple/ python -m mirror_switch.main < /dev/tty
 
 echo -e "\033[1;36m>>> 运行结束，清理临时文件...\033[0m"
 rm -rf "$EXTRACT_DIR" "$TEMP_ZIP"
