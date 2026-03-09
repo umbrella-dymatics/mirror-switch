@@ -5,13 +5,30 @@
 ## ✨ 特性
 
 - 🎯 **交互式操作**：支持方向键选择，用户友好
-- 🔍 **状态显示**：实时查看当前使用的源
-- 🛡️ **安全可靠**：支持恢复官方源
-- ⚡ **多工具支持**：支持 uv、pip、npm、cargo
+- 🚀 **免安装运行**：提供云端一键执行脚本，脱离任何环境依赖
+- 🔍 **状态显示**：实时查看当前跨三层（环境变量/项目级/全局级）配置使用的源
+- 🛡️ **安全可靠**：支持一键恢复官方源
+- ⚡ **多工具支持**：支持 uv、pip、npm、cargo、go、conda
 
-## 📦 安装
+## 📦 安装与运行
 
-### 使用 uv 安装（推荐）
+### 推荐：免安装一键运行 (Cloudflare CDN 极速加速)
+
+无论你的环境里有没有安装 Python、uv 等依赖，都可以直接复制以下命令秒级启动：
+
+**Windows (PowerShell)**:
+
+```powershell
+irm https://tool.vanzor.com/run.ps1 | iex
+```
+
+**Linux / macOS**:
+
+```bash
+curl -sSL https://tool.vanzor.com/run.sh | bash
+```
+
+### 本地开发或通过 uv 运行
 
 ```bash
 # 在项目目录下
@@ -52,12 +69,14 @@ python -m mirror_switch.main
 
 ### 支持的包管理器
 
-- **uv**: Python 包管理器（uv）
-- **pip**: Python 包管理器（pip）
-- **npm**: Node.js 包管理器（npm）
-- **cargo**: Rust 包管理器（cargo）
+- **uv**: Python 现代包管理器
+- **pip**: Python 基础包管理器
+- **npm**: Node.js 包管理器
+- **cargo**: Rust 包管理器
+- **go**: Go 包/环境管理器
+- **conda**: Conda 环境管理器
 
-### uv (Python 包管理器)
+### uv / pip (Python 包管理器)
 
 | 代码 | 名称 | 说明 |
 |------|------|------|
@@ -65,15 +84,6 @@ python -m mirror_switch.main
 | `aliyun` | 阿里云 | 阿里云镜像 |
 | `tsinghua` | 清华源 | 清华大学镜像（推荐） |
 | `tencent` | 腾讯云 | 腾讯云镜像 |
-| `netease` | 网易 | 网易镜像 |
-
-### pip (Python 包管理器)
-
-| 代码 | 名称 | 说明 |
-|------|------|------|
-| `default` | 官方源 | PyPI 官方源 |
-| `aliyun` | 阿里云 | 阿里云镜像 |
-| `tsinghua` | 清华源 | 清华大学镜像（推荐） |
 | `tencent` | 腾讯云 | 腾讯云镜像 |
 | `netease` | 网易 | 网易镜像 |
 
@@ -159,10 +169,12 @@ $ mirror-switch
 ## 🔧 依赖说明
 
 需要安装的 Python 包：
+
 - `inquirerpy>=0.3.4` - 交互式命令行
 - `colorama>=0.4.6` - 彩色输出
 
 系统要求：
+
 - `uv` - 用于 uv 源切换
 - `pip` - 用于 pip 源切换
 - `npm` - 用于 npm 源切换（如需要）
@@ -175,6 +187,7 @@ $ mirror-switch
 配置文件位置：`~/.config/uv/uv.toml`
 
 使用 `uv config` 命令管理：
+
 - 设置源：`uv config index-url <url>`
 - 移除配置：`uv config --remove index-url`
 
@@ -183,11 +196,13 @@ $ mirror-switch
 配置文件位置：`~/.config/pip/pip.conf`
 
 使用 `pip config` 命令管理：
+
 - 设置源：`pip config set global.index-url <url>`
 
 ### npm 配置原理
 
 使用 `npm config` 命令管理：
+
 - 设置源：`npm config set registry <url>`
 
 ### cargo 配置原理
