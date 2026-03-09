@@ -1,0 +1,17 @@
+[project]
+name = "mirror-switch"
+version = "0.1.0"
+description = "Interactive tool to quickly switch between mirror sources for uv and npm"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "inquirerpy>=0.3.4",
+    "colorama>=0.4.6",
+]
+
+[project.scripts]
+mirror-switch = "mirror_switch.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

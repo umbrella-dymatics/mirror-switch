@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirror Switch - 交互式镜像源切换工具</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0c0e14;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            z-index: 10;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .description {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .command-box {
+            position: relative;
+            background: #000;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #334155;
+            transition: transform 0.3s ease;
+        }
+
+        .command-box:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        .command-box h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .command-box h3 svg {
+            margin-right: 8px;
+        }
+
+        .code-snippet {
+            font-family: 'JetBrains Mono', monospace;
+            background: #1e293b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 15px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .code-snippet:hover {
+            background: #334155;
+            border-color: #475569;
+        }
+
+        .copy-hint {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-align: right;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+        }
+
+        .badge::before {
+            content: "✓";
+            margin-right: 6px;
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .main-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Mirror Switch</h1>
+            <p class="description">
+                一个交互式命令行工具，支持 <b>uv, pip, npm, cargo, go, conda</b> 国内镜像源一键秒级切换。
+            </p>
+        </header>
+
+        <div class="main-card">
+            <h2 style="margin-bottom: 20px; font-weight: 600; font-size: 1.5rem;">快速开始</h2>
+
+            <div class="grid">
+                <!-- Linux/macOS -->
+                <div class="command-box">
+                    <h3>
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path
+                                d="M8 0a8 8 0 0 0-8 8c0 1.844.627 3.542 1.677 4.902L1.13 14.777a.5.5 0 0 0 .693.693l1.875-1.875A7.962 7.962 0 0 0 8 16a8 8 0 0 0 8-8A8 8 0 0 0 8 0zM1.154 8a6.846 6.846 0 1 1 13.692 0A6.846 6.846 0 0 1 1.154 8z" />
+                        </svg>
+                        Linux / macOS
+                    </h3>
+                    <div class="code-snippet" onclick="copyToClipboard(this)">curl -sSL https://tool.vanzor.com/run.sh |
+                        bash</div>
+                    <p class="copy-hint">点击命令即可复制</p>
+                </div>
+
+                <!-- Windows -->
+                <div class="command-box">
+                    <h3>
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path
+                                d="M14.021 15.747a.5.5 0 0 1-.354-.147l-1.414-1.414a.5.5 0 0 1 .708-.708l1.414 1.414a.5.5 0 0 1-.354.854ZM.5 14h15a.5.5 0 0 1 0 1h-15a.5.5 0 0 1 0-1ZM.5 12h15a.5.5 0 0 1 0 1h-15a.5.5 0 1 1 0-1ZM.5 10h15a.5.5 0 0 1 0 1h-15a.5.5 0 1 1 0-1ZM.5 8h15a.5.5 0 0 1 0 1h-15a.5.5 0 1 1 0-1Z" />
+                        </svg>
+                        Windows (PowerShell)
+                    </h3>
+                    <div class="code-snippet" onclick="copyToClipboard(this)">irm https://tool.vanzor.com/run.ps1 | iex
+                    </div>
+                    <p class="copy-hint">点击命令即可复制</p>
+                </div>
+            </div>
+
+            <div class="badges">
+                <span class="badge">无需安装</span>
+                <span class="badge">自动同步</span>
+                <span class="badge">安全隔离</span>
+                <span class="badge">国产加速</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>基于 MIT 协议开源 | 由 Cloudflare Pages 强力驱动</p>
+        </footer>
+    </div>
+
+    <script>
+        function copyToClipboard(element) {
+            const text = element.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = element.innerText;
+                element.innerText = "✓ 已复制到剪贴板";
+                element.style.background = "#065f46";
+                setTimeout(() => {
+                    element.innerText = originalText;
+                    element.style.background = "";
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+
+</html>
